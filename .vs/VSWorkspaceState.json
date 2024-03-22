@@ -1,0 +1,12 @@
+{
+  "ExpandedNodes": [
+    "",
+    "\\ConsoleApp1",
+    "\\Joshua.API",
+    "\\Joshua.Application",
+    "\\Joshua.Domain",
+    "\\Joshua.Infra.Data"
+  ],
+  "SelectedNode": "\\Joshua.API\\Program.cs",
+  "PreviewInSolutionExplorer": false
+}
