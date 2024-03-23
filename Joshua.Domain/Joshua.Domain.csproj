@@ -8,9 +8,11 @@
   </PropertyGroup>
 
   <ItemGroup>
-    <ProjectReference Include="..\Joshua.Domain\Joshua.Domain.csproj" />
-    <ProjectReference Include="..\Joshua.Infra.Data\Joshua.Infra.Data.csproj" />
-    <ProjectReference Include="..\Joshua.Infra.Utils\Joshua.Infra.Utils.csproj" />
+    <Folder Include="ViewModels\" />
+  </ItemGroup>
+
+  <ItemGroup>
+    <PackageReference Include="Microsoft.EntityFrameworkCore" Version="6.0.28" />
   </ItemGroup>
 
 </Project>
