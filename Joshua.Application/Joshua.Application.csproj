@@ -1,14 +1,16 @@
 <Project Sdk="Microsoft.NET.Sdk">
 
   <PropertyGroup>
-    <OutputType>Exe</OutputType>
+    <OutputType>Library</OutputType>
     <TargetFramework>net6.0</TargetFramework>
     <ImplicitUsings>enable</ImplicitUsings>
     <Nullable>enable</Nullable>
   </PropertyGroup>
 
   <ItemGroup>
-    <Folder Include="Business\" />
+    <ProjectReference Include="..\Joshua.Domain\Joshua.Domain.csproj" />
+    <ProjectReference Include="..\Joshua.Infra.Data\Joshua.Infra.Data.csproj" />
+    <ProjectReference Include="..\Joshua.Infra.Utils\Joshua.Infra.Utils.csproj" />
   </ItemGroup>
 
 </Project>
