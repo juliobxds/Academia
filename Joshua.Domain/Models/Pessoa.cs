@@ -1,6 +1,6 @@
 ﻿namespace Joshua.Domain.Models
 {
-    public class Funcionario : Base
+    public class Pessoa : Base 
     {
         public string Nome { get; set; }
         public string Email { get; set; }

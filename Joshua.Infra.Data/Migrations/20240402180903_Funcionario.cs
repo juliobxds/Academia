@@ -5,7 +5,7 @@ using Microsoft.EntityFrameworkCore.Migrations;
 
 namespace Joshua.Infra.Data.Migrations
 {
-    public partial class Initial : Migration
+    public partial class Funcionario : Migration
     {
         protected override void Up(MigrationBuilder migrationBuilder)
         {
@@ -49,16 +49,18 @@ namespace Joshua.Infra.Data.Migrations
                 });
 
             migrationBuilder.CreateTable(
-                name: "funcionario",
+                name: "Funcionario",
                 columns: table => new
                 {
                     id = table.Column<int>(type: "int", nullable: false)
                         .Annotation("SqlServer:Identity", "1, 1"),
-                    nome = table.Column<string>(type: "nvarchar(200)", maxLength: 200, nullable: false)
+                    Nome = table.Column<string>(type: "nvarchar(200)", maxLength: 200, nullable: false),
+                    Email = table.Column<string>(type: "nvarchar(200)", maxLength: 200, nullable: false),
+                    Celular = table.Column<string>(type: "nvarchar(30)", maxLength: 30, nullable: false)
                 },
                 constraints: table =>
                 {
-                    table.PrimaryKey("PK_funcionario", x => x.id);
+                    table.PrimaryKey("PK_Funcionario", x => x.id);
                 });
 
             migrationBuilder.CreateTable(
@@ -225,7 +227,7 @@ namespace Joshua.Infra.Data.Migrations
                 name: "AspNetUserTokens");
 
             migrationBuilder.DropTable(
-                name: "funcionario");
+                name: "Funcionario");
 
             migrationBuilder.DropTable(
                 name: "AspNetRoles");

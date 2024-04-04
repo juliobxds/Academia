@@ -1,5 +1,5 @@
-﻿using Joshua.Application.Business.Interfaces;
-using Joshua.Application.Business;
+﻿using Joshua.Application.Business;
+using Joshua.Application.Business.Interfaces;
 
 namespace Joshua.API.Configurations
 {
@@ -8,6 +8,7 @@ namespace Joshua.API.Configurations
         public static void AddServices(this IServiceCollection services)
         {
             services.AddScoped<IFuncionarioBusiness, FuncionarioBusiness>();
+            
         }
     }
 }

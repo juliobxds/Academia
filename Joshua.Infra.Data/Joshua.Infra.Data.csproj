@@ -23,4 +23,8 @@
     <ProjectReference Include="..\Joshua.Infra.Utils\Joshua.Infra.Utils.csproj" />
   </ItemGroup>
 
+  <ItemGroup>
+    <Folder Include="Migrations\" />
+  </ItemGroup>
+
 </Project>
