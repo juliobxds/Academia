@@ -10,9 +10,7 @@ namespace Joshua.Application.AutoMapper
         public ProfileMapper() {
 
                 CreateMap<Funcionario, FuncionarioViewModel>().ReverseMap();
-
-                //CreateMap<EnderecoModel, EnderecoDto>().ReverseMap();
-                //CreateMap<EnderecoModel, EnderecoDto>().ReverseMap();
+                CreateMap<Endereco, EnderecoViewModel>().ReverseMap();
         }
     }
 }

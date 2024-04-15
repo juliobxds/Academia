@@ -23,17 +23,15 @@ namespace Joshua.API.Controllers
         }
 
         [HttpGet("ObterPorId")]
-        public Task<Response<Funcionario>> ObterPorId(int id)
+        public async Task<Response<FuncionarioViewModel>> ObterPorId(int id)
         {
-            var funcionarioPorId = _funcionario.ObterPorId(id);
-
-            return funcionarioPorId;
+            return await _funcionario.ObterPorId(id);
         }
 
         [HttpGet("ListarTodos")]
-        public Task<Response<List<Funcionario>>> ListarTodos()
+        public async Task<Response<List<FuncionarioViewModel>>> ListarTodos()
         {
-            return _funcionario.ListarTodos();
+            return await _funcionario.ListarTodos();
         }
 
         [HttpPost("Adicionar")]
@@ -49,10 +47,9 @@ namespace Joshua.API.Controllers
         }
 
         [HttpDelete("Deletar")]
-        public Task<Response<FuncionarioViewModel>> Remover(int id) 
+        public async Task<Response<FuncionarioViewModel>> Remover(int id) 
         {
-           var delete = _funcionario.Remover(id);
-            return delete;
+           return await _funcionario.Remover(id);
         }
 
     }

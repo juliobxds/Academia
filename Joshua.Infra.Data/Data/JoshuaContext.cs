@@ -2,12 +2,15 @@
 using Joshua.Infra.Data.Data.Mapping;
 using Microsoft.AspNetCore.Identity.EntityFrameworkCore;
 using Microsoft.EntityFrameworkCore;
+using Microsoft.Extensions.Logging;
 
 namespace Joshua.Infra.Data.Data
 {
     public class JoshuaContext : IdentityDbContext
     {
         public virtual DbSet<Funcionario> Funcionarios { get; set; }
+        public virtual DbSet<Endereco> Enderecos { get; set; }
+
 
         public JoshuaContext(DbContextOptions<JoshuaContext> options) : base(options)
         {
@@ -30,7 +33,7 @@ namespace Joshua.Infra.Data.Data
             base.OnModelCreating(modelBuilder);
 
             modelBuilder.ApplyConfiguration(new FuncionarioMap());
-
+            modelBuilder.ApplyConfiguration(new EnderecoMap());
         }
     }
 }

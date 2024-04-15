@@ -72,7 +72,7 @@ app.UseCors(c =>
     c.AllowAnyHeader();
     c.AllowAnyMethod();
     c.AllowAnyOrigin();
-    //c.SetIsOriginAllowed();
+    
     
 });
 

@@ -9,7 +9,7 @@ using System.Net;
 
 namespace Joshua.Application.Business
 {
-    
+
     public class FuncionarioBusiness : IFuncionarioBusiness
     {
         private readonly JoshuaContext db;
@@ -18,54 +18,61 @@ namespace Joshua.Application.Business
         public FuncionarioBusiness(JoshuaContext db, IMapper map)
         {
             this.db = db;
-            this.mapper = map;
+            mapper = map;
         }
-        public async Task<Response<List<Funcionario>>> ListarTodos()
+        public async Task<Response<List<FuncionarioViewModel>>> ListarTodos()
         {
-            var response = new Response<List<Funcionario>>();
+            var response = new Response<List<FuncionarioViewModel>>();
 
             try
             {
-                response.Entity = db.Funcionarios.AsNoTracking().ToList();
+                var funcionarioListaDB = db.Funcionarios.Include(e => e.Enderecos).AsNoTracking().ToList();
+                var funcionariosViewModel = mapper.Map<List<FuncionarioViewModel>>(funcionarioListaDB);
+                response.Entity = funcionariosViewModel;
 
-                if (response == null)
-                {
-                  response.Status = HttpStatusCode.NotFound;
-                } else
-                  response.Status = HttpStatusCode.OK;
-                {
-                  await db.Funcionarios.ToListAsync();
-                  await db.SaveChangesAsync();
+                return response;
 
-                  return response;
-                }
             } catch (Exception e)
             {
                 response.Status = HttpStatusCode.InternalServerError;
                 response.Message = "Ocorreu um erro ao obter todos os funcionarios : " + e.Message;
             }
             return response;
-            
+
         }
-        public async Task<Response<Funcionario>> ObterPorId(int id)
+        public async Task<Response<FuncionarioViewModel>> ObterPorId(int id)
         {
-            var response = new Response<Funcionario>();
+            var response = new Response<FuncionarioViewModel>();
 
             try
             {
-                //TODO: Validações
-                response.Entity = db.Funcionarios.FirstOrDefault(f => f.Id == id);
-
-                if (response.Entity == null)
+                //validar id
+                if (id < 1)
                 {
                     response.Status = HttpStatusCode.NotFound;
-                } else
-                {
-                    response.Status = HttpStatusCode.OK;
+                    response.Message = "Funcionario não pode ser encontrado!";
+                    return response;
                 }
 
-                await db.Funcionarios.FirstOrDefaultAsync(f => f.Id == id);
-                await db.SaveChangesAsync();
+                //TODO: Validações 
+                var funcionarioDb = db.Funcionarios.Include(e => e.Enderecos).FirstOrDefault(f => f.Id == id);
+
+                if (funcionarioDb == null)
+                {
+                    response.Status = HttpStatusCode.NotFound;
+                    response.Message = "Funcionario não pode ser encontrado";
+                    return response;
+                }
+
+                funcionarioDb.CriadoEm = DateTime.Now;
+                funcionarioDb.ModificadoEm = DateTime.Now;
+
+
+                response.Status = HttpStatusCode.OK;
+                response.Message = "Funcionario encontrado!";
+
+                var funcionarioViewModel = mapper.Map<FuncionarioViewModel>(funcionarioDb);
+                response.Entity = funcionarioViewModel;
 
                 return response;
 
@@ -93,15 +100,19 @@ namespace Joshua.Application.Business
 
                 ValidarFuncionario(response, funcionarioVM);
 
-                var funcionarioBD = db.Funcionarios.AsNoTracking().FirstOrDefault(f => f.Nome.ToLower().Trim() == funcionarioVM.Nome.ToLower().Trim());
+                var funcionarioBD = db.Funcionarios.Include(e => e.Enderecos).AsNoTracking().FirstOrDefault(f => f.Nome.ToLower().Trim() == funcionarioVM.Nome.ToLower().Trim());
 
                 if (funcionarioBD != null)
                 {
                     response.Status = HttpStatusCode.NotAcceptable;
-                    response.Message = "Esse usuário já foi cadastrado no banco de dados!";
+                    response.Message = "Esse Funcionário já foi cadastrado no banco de dados!";
 
                     return response;
+
                 }
+                funcionarioVM.CriadoEm = DateTime.Now;
+                funcionarioVM.ModificadoEm = DateTime.Now;
+
 
                 var funcionarioModel = mapper.Map<Funcionario>(funcionarioVM);
 
@@ -109,8 +120,6 @@ namespace Joshua.Application.Business
                 await db.SaveChangesAsync();
 
                 response.Entity = funcionarioVM;
-
-                return response;
 
             } catch (Exception e)
             {
@@ -127,65 +136,73 @@ namespace Joshua.Application.Business
 
             try
             {
-                var funcionarioBd = db.Funcionarios.AsNoTracking().FirstOrDefault(f => f.Id  == id); 
+                var funcionarioBd = db.Funcionarios.Include(e => e.Enderecos).AsNoTracking().FirstOrDefault(f => f.Id == id);
 
                 if (funcionarioBd == null)
                 {
                     response.Status = HttpStatusCode.NotFound;
-                    response.Message = "Funcionario não existe!";
+                    response.Message = "Funcionario não pode ser encontrado";
+
                     return response;
 
-                } else
-                {
-                    funcionarioBd.Nome = funcionarioVM.Nome;
-                    funcionarioBd.Email = funcionarioVM.Email;
-                    funcionarioBd.Celular = funcionarioVM.Celular;
-                    
-                    db.Funcionarios.Update(funcionarioBd);
-                    await db.SaveChangesAsync();
-
-                    response.Status = HttpStatusCode.OK;
-                    response.Message = "Esse usuário foi atualizado no banco de dados!";
-
-                    var map = mapper.Map<FuncionarioViewModel>(funcionarioBd);
-
-                    response.Entity = map;
-                    return response;
                 }
+                var enderecoViewModel = mapper.Map<List<Endereco>>(funcionarioVM.Enderecos); 
+
+                funcionarioBd.Nome = funcionarioVM.Nome;
+                funcionarioBd.Email = funcionarioVM.Email;
+                funcionarioBd.Celular = funcionarioVM.Celular;
+                funcionarioBd.Enderecos = enderecoViewModel;
+                funcionarioBd.CriadoEm = funcionarioVM.CriadoEm;
+                funcionarioBd.ModificadoEm = funcionarioVM.ModificadoEm;
+
+                db.Funcionarios.Update(funcionarioBd);
+                await db.SaveChangesAsync();
+
+                response.Status = HttpStatusCode.OK;
+                response.Message = "Este Funcionário foi atualizado!";
+
+                var map = mapper.Map<FuncionarioViewModel>(funcionarioBd);
+
+                response.Entity = map;
+                return response;
+
 
             } catch (Exception e)
             {
                 response.Status = HttpStatusCode.InternalServerError;
-                response.Message = "Ocorreu um erro ao atualizar o funcionario : " + e.Message;
+                response.Message = "Ocorreu um erro ao atualizar o Funcionário : " + e.Message;
 
             }
-                return response;
+            return response;
 
         }
         public async Task<Response<FuncionarioViewModel>> Remover(int id)
         {
             var response = new Response<FuncionarioViewModel>();
 
-            var PegarPorid = db.Funcionarios.AsNoTracking().FirstOrDefault(f => f.Id == id);
             try
             {
-                if (PegarPorid == null) {
+                var FuncionarioDb = db.Funcionarios.AsNoTracking().Include("Enderecos").FirstOrDefault(f => f.Id == id);
+
+                if (FuncionarioDb == null)
+                {
                     response.Status = HttpStatusCode.NotFound;
-                } else {
-                    response.Status = HttpStatusCode.OK;
-                    response.Message = "Usuario excluido com sucesso!";
+                    response.Message = "Funcionario não pode ser encontrado";
 
-                var mapeamento = mapper.Map<Funcionario>(PegarPorid);
-                var mapreverse = mapper.Map<FuncionarioViewModel>(mapeamento);
+                    return response;
+                }
 
-                db.Funcionarios.Remove(mapeamento);
+                db.Funcionarios.Remove(FuncionarioDb);
                 db.SaveChanges();
+
+                response.Status = HttpStatusCode.OK;
+                response.Message = "Funcionário excluido com sucesso!";
+
+                var mapreverse = mapper.Map<FuncionarioViewModel>(FuncionarioDb);
 
                 response.Entity = mapreverse;
 
                 return response;
-
-                }
 
             } catch (Exception e)
             {
@@ -193,7 +210,7 @@ namespace Joshua.Application.Business
                 response.Message = "Ocorreu um erro ao remover funcionario : " + e.Message;
 
             }
-                return response;
+            return response;
         }
 
 

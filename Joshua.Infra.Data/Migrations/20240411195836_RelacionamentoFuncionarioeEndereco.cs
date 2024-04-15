@@ -5,7 +5,7 @@ using Microsoft.EntityFrameworkCore.Migrations;
 
 namespace Joshua.Infra.Data.Migrations
 {
-    public partial class Funcionario : Migration
+    public partial class RelacionamentoFuncionarioeEndereco : Migration
     {
         protected override void Up(MigrationBuilder migrationBuilder)
         {
@@ -54,9 +54,11 @@ namespace Joshua.Infra.Data.Migrations
                 {
                     id = table.Column<int>(type: "int", nullable: false)
                         .Annotation("SqlServer:Identity", "1, 1"),
-                    Nome = table.Column<string>(type: "nvarchar(200)", maxLength: 200, nullable: false),
-                    Email = table.Column<string>(type: "nvarchar(200)", maxLength: 200, nullable: false),
-                    Celular = table.Column<string>(type: "nvarchar(30)", maxLength: 30, nullable: false)
+                    criadoEm = table.Column<DateTime>(type: "datetime2", maxLength: 30, nullable: false),
+                    modificadoEm = table.Column<DateTime>(type: "datetime2", maxLength: 30, nullable: false),
+                    nome = table.Column<string>(type: "nvarchar(200)", maxLength: 200, nullable: false),
+                    email = table.Column<string>(type: "nvarchar(200)", maxLength: 200, nullable: false),
+                    celular = table.Column<string>(type: "nvarchar(30)", maxLength: 30, nullable: false)
                 },
                 constraints: table =>
                 {
@@ -169,6 +171,29 @@ namespace Joshua.Infra.Data.Migrations
                         onDelete: ReferentialAction.Cascade);
                 });
 
+            migrationBuilder.CreateTable(
+                name: "Endereco",
+                columns: table => new
+                {
+                    id = table.Column<int>(type: "int", nullable: false)
+                        .Annotation("SqlServer:Identity", "1, 1"),
+                    logradouro = table.Column<string>(type: "nvarchar(200)", maxLength: 200, nullable: false),
+                    rua = table.Column<string>(type: "nvarchar(200)", maxLength: 200, nullable: false),
+                    cep = table.Column<string>(type: "nvarchar(8)", maxLength: 8, nullable: false),
+                    cidade = table.Column<string>(type: "nvarchar(100)", maxLength: 100, nullable: false),
+                    estado = table.Column<string>(type: "nvarchar(100)", maxLength: 100, nullable: false),
+                    idFuncionario = table.Column<int>(type: "int", nullable: true)
+                },
+                constraints: table =>
+                {
+                    table.PrimaryKey("PK_Endereco", x => x.id);
+                    table.ForeignKey(
+                        name: "FK_Endereco_Funcionario_idFuncionario",
+                        column: x => x.idFuncionario,
+                        principalTable: "Funcionario",
+                        principalColumn: "id");
+                });
+
             migrationBuilder.CreateIndex(
                 name: "IX_AspNetRoleClaims_RoleId",
                 table: "AspNetRoleClaims",
@@ -207,6 +232,11 @@ namespace Joshua.Infra.Data.Migrations
                 column: "NormalizedUserName",
                 unique: true,
                 filter: "[NormalizedUserName] IS NOT NULL");
+
+            migrationBuilder.CreateIndex(
+                name: "IX_Endereco_idFuncionario",
+                table: "Endereco",
+                column: "idFuncionario");
         }
 
         protected override void Down(MigrationBuilder migrationBuilder)
@@ -227,13 +257,16 @@ namespace Joshua.Infra.Data.Migrations
                 name: "AspNetUserTokens");
 
             migrationBuilder.DropTable(
-                name: "Funcionario");
+                name: "Endereco");
 
             migrationBuilder.DropTable(
                 name: "AspNetRoles");
 
             migrationBuilder.DropTable(
                 name: "AspNetUsers");
+
+            migrationBuilder.DropTable(
+                name: "Funcionario");
         }
     }
 }

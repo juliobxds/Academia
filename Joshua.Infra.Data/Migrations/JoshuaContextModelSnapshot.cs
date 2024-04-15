@@ -22,6 +22,56 @@ namespace Joshua.Infra.Data.Migrations
 
             SqlServerModelBuilderExtensions.UseIdentityColumns(modelBuilder, 1L, 1);
 
+            modelBuilder.Entity("Joshua.Domain.Models.Endereco", b =>
+                {
+                    b.Property<int>("Id")
+                        .ValueGeneratedOnAdd()
+                        .HasColumnType("int")
+                        .HasColumnName("id");
+
+                    SqlServerPropertyBuilderExtensions.UseIdentityColumn(b.Property<int>("Id"), 1L, 1);
+
+                    b.Property<string>("Cep")
+                        .IsRequired()
+                        .HasMaxLength(8)
+                        .HasColumnType("nvarchar(8)")
+                        .HasColumnName("cep");
+
+                    b.Property<string>("Cidade")
+                        .IsRequired()
+                        .HasMaxLength(100)
+                        .HasColumnType("nvarchar(100)")
+                        .HasColumnName("cidade");
+
+                    b.Property<string>("Estado")
+                        .IsRequired()
+                        .HasMaxLength(100)
+                        .HasColumnType("nvarchar(100)")
+                        .HasColumnName("estado");
+
+                    b.Property<int?>("IdFuncionario")
+                        .HasColumnType("int")
+                        .HasColumnName("idFuncionario");
+
+                    b.Property<string>("Logradouro")
+                        .IsRequired()
+                        .HasMaxLength(200)
+                        .HasColumnType("nvarchar(200)")
+                        .HasColumnName("logradouro");
+
+                    b.Property<string>("Rua")
+                        .IsRequired()
+                        .HasMaxLength(200)
+                        .HasColumnType("nvarchar(200)")
+                        .HasColumnName("rua");
+
+                    b.HasKey("Id");
+
+                    b.HasIndex("IdFuncionario");
+
+                    b.ToTable("Endereco", (string)null);
+                });
+
             modelBuilder.Entity("Joshua.Domain.Models.Funcionario", b =>
                 {
                     b.Property<int>("Id")
@@ -35,19 +85,29 @@ namespace Joshua.Infra.Data.Migrations
                         .IsRequired()
                         .HasMaxLength(30)
                         .HasColumnType("nvarchar(30)")
-                        .HasColumnName("Celular");
+                        .HasColumnName("celular");
+
+                    b.Property<DateTime>("CriadoEm")
+                        .HasMaxLength(30)
+                        .HasColumnType("datetime2")
+                        .HasColumnName("criadoEm");
 
                     b.Property<string>("Email")
                         .IsRequired()
                         .HasMaxLength(200)
                         .HasColumnType("nvarchar(200)")
-                        .HasColumnName("Email");
+                        .HasColumnName("email");
+
+                    b.Property<DateTime>("ModificadoEm")
+                        .HasMaxLength(30)
+                        .HasColumnType("datetime2")
+                        .HasColumnName("modificadoEm");
 
                     b.Property<string>("Nome")
                         .IsRequired()
                         .HasMaxLength(200)
                         .HasColumnType("nvarchar(200)")
-                        .HasColumnName("Nome");
+                        .HasColumnName("nome");
 
                     b.HasKey("Id");
 
@@ -252,6 +312,15 @@ namespace Joshua.Infra.Data.Migrations
                     b.ToTable("AspNetUserTokens", (string)null);
                 });
 
+            modelBuilder.Entity("Joshua.Domain.Models.Endereco", b =>
+                {
+                    b.HasOne("Joshua.Domain.Models.Funcionario", "Funcionario")
+                        .WithMany("Enderecos")
+                        .HasForeignKey("IdFuncionario");
+
+                    b.Navigation("Funcionario");
+                });
+
             modelBuilder.Entity("Microsoft.AspNetCore.Identity.IdentityRoleClaim<string>", b =>
                 {
                     b.HasOne("Microsoft.AspNetCore.Identity.IdentityRole", null)
@@ -301,6 +370,11 @@ namespace Joshua.Infra.Data.Migrations
                         .HasForeignKey("UserId")
                         .OnDelete(DeleteBehavior.Cascade)
                         .IsRequired();
+                });
+
+            modelBuilder.Entity("Joshua.Domain.Models.Funcionario", b =>
+                {
+                    b.Navigation("Enderecos");
                 });
 #pragma warning restore 612, 618
         }
