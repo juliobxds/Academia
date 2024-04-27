@@ -8,6 +8,10 @@
   </PropertyGroup>
 
   <ItemGroup>
+    <PackageReference Include="AutoMapper" Version="13.0.1" />
+  </ItemGroup>
+
+  <ItemGroup>
     <ProjectReference Include="..\Joshua.Domain\Joshua.Domain.csproj" />
     <ProjectReference Include="..\Joshua.Infra.Data\Joshua.Infra.Data.csproj" />
     <ProjectReference Include="..\Joshua.Infra.Utils\Joshua.Infra.Utils.csproj" />

@@ -1,4 +1,6 @@
+using AutoMapper;
 using Joshua.API.Configurations;
+using Joshua.Application.AutoMapper;
 using Joshua.Infra.Data.Data;
 using Microsoft.EntityFrameworkCore;
 
@@ -22,6 +24,8 @@ builder.Services.AddControllers().AddNewtonsoftJson(options =>
 
 builder.Services.AddControllersWithViews();
 
+
+
 // Configurando Banco
 var connectionString = builder.Configuration.GetConnectionString("DefaultConnection") ??
                 throw new InvalidOperationException("Connection string 'DefaultConnection' not found.");
@@ -38,6 +42,17 @@ builder.Services.AddEndpointsApiExplorer();
 builder.Services.AddSwaggerConfiguration();
 builder.Services.AddSwaggerGen();
 
+
+// Auto Mapper Configurations
+var mappingConfig = new MapperConfiguration(mc =>
+{
+    mc.AddProfile(new ProfileMapper());
+});
+
+IMapper mapper = mappingConfig.CreateMapper();
+builder.Services.AddSingleton(mapper);
+
+
 var app = builder.Build();
 
 // Configure the HTTP request pipeline.
@@ -51,14 +66,18 @@ app.UseHttpsRedirection();
 
 app.UseRouting();
 
-app.UseCors(c =>
+app.UseCors(c => 
 {
+    
     c.AllowAnyHeader();
     c.AllowAnyMethod();
     c.AllowAnyOrigin();
+    
+    
 });
 
 app.UseStaticFiles();
+
 
 app.UseAuthorization();
 

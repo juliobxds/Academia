@@ -2,27 +2,32 @@
 using Joshua.Infra.Data.Data.Mapping;
 using Microsoft.AspNetCore.Identity.EntityFrameworkCore;
 using Microsoft.EntityFrameworkCore;
+using Microsoft.Extensions.Logging;
 
 namespace Joshua.Infra.Data.Data
 {
-    public  class JoshuaContext : IdentityDbContext
+    public class JoshuaContext : IdentityDbContext
     {
         public virtual DbSet<Funcionario> Funcionarios { get; set; }
+        public virtual DbSet<Endereco> Enderecos { get; set; }
+        public virtual DbSet<Cliente> Clientes { get; set; }
+
+
 
         public JoshuaContext(DbContextOptions<JoshuaContext> options) : base(options)
         {
         }
         public JoshuaContext()
         {
-                
+
         }
 
         protected override void OnConfiguring(DbContextOptionsBuilder optionsBuilder)
         {
-            if (!optionsBuilder.IsConfigured)
+            if (optionsBuilder.IsConfigured)
             {
                 optionsBuilder.UseSqlServer(
-                    "Data Source=DESKTOP-DIFT32I;Integrated Security=True; Initial Catalog=MyLocal;Connect Timeout=30;Encrypt=False;Trust Server Certificate=False;Application Intent=ReadWrite;Multi Subnet Failover=False");
+                    "Data Source=DESKTOP-6HN1C3H;Integrated Security=True; Initial Catalog=MyLocal;Connect Timeout=30;Encrypt=False;Trust Server Certificate=False;Application Intent=ReadWrite;Multi Subnet Failover=False");
             }
         }
         protected override void OnModelCreating(ModelBuilder modelBuilder)
@@ -30,7 +35,8 @@ namespace Joshua.Infra.Data.Data
             base.OnModelCreating(modelBuilder);
 
             modelBuilder.ApplyConfiguration(new FuncionarioMap());
-
+            modelBuilder.ApplyConfiguration(new EnderecoMap());
+            modelBuilder.ApplyConfiguration(new ClienteMap());
         }
     }
 }

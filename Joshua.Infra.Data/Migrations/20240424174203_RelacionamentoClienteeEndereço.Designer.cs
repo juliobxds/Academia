@@ -12,8 +12,8 @@ using Microsoft.EntityFrameworkCore.Storage.ValueConversion;
 namespace Joshua.Infra.Data.Migrations
 {
     [DbContext(typeof(JoshuaContext))]
-    [Migration("20240323205856_Initial")]
-    partial class Initial
+    [Migration("20240424174203_RelacionamentoClienteeEndereço")]
+    partial class RelacionamentoClienteeEndereço
     {
         protected override void BuildTargetModel(ModelBuilder modelBuilder)
         {
@@ -24,7 +24,7 @@ namespace Joshua.Infra.Data.Migrations
 
             SqlServerModelBuilderExtensions.UseIdentityColumns(modelBuilder, 1L, 1);
 
-            modelBuilder.Entity("Joshua.Domain.Models.Funcionario", b =>
+            modelBuilder.Entity("Joshua.Domain.Models.Cliente", b =>
                 {
                     b.Property<int>("Id")
                         .ValueGeneratedOnAdd()
@@ -32,6 +32,28 @@ namespace Joshua.Infra.Data.Migrations
                         .HasColumnName("id");
 
                     SqlServerPropertyBuilderExtensions.UseIdentityColumn(b.Property<int>("Id"), 1L, 1);
+
+                    b.Property<string>("Celular")
+                        .IsRequired()
+                        .HasMaxLength(30)
+                        .HasColumnType("nvarchar(30)")
+                        .HasColumnName("celular");
+
+                    b.Property<DateTime>("CriadoEm")
+                        .HasMaxLength(30)
+                        .HasColumnType("datetime2")
+                        .HasColumnName("criadoEm");
+
+                    b.Property<string>("Email")
+                        .IsRequired()
+                        .HasMaxLength(200)
+                        .HasColumnType("nvarchar(200)")
+                        .HasColumnName("email");
+
+                    b.Property<DateTime>("ModificadoEm")
+                        .HasMaxLength(30)
+                        .HasColumnType("datetime2")
+                        .HasColumnName("modificadoEm");
 
                     b.Property<string>("Nome")
                         .IsRequired()
@@ -41,7 +63,105 @@ namespace Joshua.Infra.Data.Migrations
 
                     b.HasKey("Id");
 
-                    b.ToTable("funcionario", (string)null);
+                    b.ToTable("Cliente", (string)null);
+                });
+
+            modelBuilder.Entity("Joshua.Domain.Models.Endereco", b =>
+                {
+                    b.Property<int>("Id")
+                        .ValueGeneratedOnAdd()
+                        .HasColumnType("int")
+                        .HasColumnName("id");
+
+                    SqlServerPropertyBuilderExtensions.UseIdentityColumn(b.Property<int>("Id"), 1L, 1);
+
+                    b.Property<string>("Cep")
+                        .IsRequired()
+                        .HasMaxLength(8)
+                        .HasColumnType("nvarchar(8)")
+                        .HasColumnName("cep");
+
+                    b.Property<string>("Cidade")
+                        .IsRequired()
+                        .HasMaxLength(100)
+                        .HasColumnType("nvarchar(100)")
+                        .HasColumnName("cidade");
+
+                    b.Property<string>("Estado")
+                        .IsRequired()
+                        .HasMaxLength(100)
+                        .HasColumnType("nvarchar(100)")
+                        .HasColumnName("estado");
+
+                    b.Property<string>("Logradouro")
+                        .IsRequired()
+                        .HasMaxLength(200)
+                        .HasColumnType("nvarchar(200)")
+                        .HasColumnName("logradouro");
+
+                    b.Property<string>("Rua")
+                        .IsRequired()
+                        .HasMaxLength(200)
+                        .HasColumnType("nvarchar(200)")
+                        .HasColumnName("rua");
+
+                    b.Property<int?>("idCliente")
+                        .HasColumnType("int")
+                        .HasColumnName("idCliente");
+
+                    b.Property<int?>("idFuncionario")
+                        .HasColumnType("int")
+                        .HasColumnName("idFuncionario");
+
+                    b.HasKey("Id");
+
+                    b.HasIndex("idCliente");
+
+                    b.HasIndex("idFuncionario");
+
+                    b.ToTable("Endereco", (string)null);
+                });
+
+            modelBuilder.Entity("Joshua.Domain.Models.Funcionario", b =>
+                {
+                    b.Property<int>("Id")
+                        .ValueGeneratedOnAdd()
+                        .HasColumnType("int")
+                        .HasColumnName("id");
+
+                    SqlServerPropertyBuilderExtensions.UseIdentityColumn(b.Property<int>("Id"), 1L, 1);
+
+                    b.Property<string>("Celular")
+                        .IsRequired()
+                        .HasMaxLength(30)
+                        .HasColumnType("nvarchar(30)")
+                        .HasColumnName("celular");
+
+                    b.Property<DateTime>("CriadoEm")
+                        .HasMaxLength(30)
+                        .HasColumnType("datetime2")
+                        .HasColumnName("criadoEm");
+
+                    b.Property<string>("Email")
+                        .IsRequired()
+                        .HasMaxLength(200)
+                        .HasColumnType("nvarchar(200)")
+                        .HasColumnName("email");
+
+                    b.Property<DateTime>("ModificadoEm")
+                        .HasMaxLength(30)
+                        .HasColumnType("datetime2")
+                        .HasColumnName("modificadoEm");
+
+                    b.Property<string>("Nome")
+                        .IsRequired()
+                        .HasMaxLength(200)
+                        .HasColumnType("nvarchar(200)")
+                        .HasColumnName("nome");
+
+                    b.HasKey("Id");
+
+                    b.ToTable("Funcionario", (string)null);
                 });
 
             modelBuilder.Entity("Microsoft.AspNetCore.Identity.IdentityRole", b =>
@@ -242,6 +362,21 @@ namespace Joshua.Infra.Data.Migrations
                     b.ToTable("AspNetUserTokens", (string)null);
                 });
 
+            modelBuilder.Entity("Joshua.Domain.Models.Endereco", b =>
+                {
+                    b.HasOne("Joshua.Domain.Models.Cliente", "Cliente")
+                        .WithMany("Enderecos")
+                        .HasForeignKey("idCliente");
+
+                    b.HasOne("Joshua.Domain.Models.Funcionario", "Funcionario")
+                        .WithMany("Enderecos")
+                        .HasForeignKey("idFuncionario");
+
+                    b.Navigation("Cliente");
+
+                    b.Navigation("Funcionario");
+                });
+
             modelBuilder.Entity("Microsoft.AspNetCore.Identity.IdentityRoleClaim<string>", b =>
                 {
                     b.HasOne("Microsoft.AspNetCore.Identity.IdentityRole", null)
@@ -291,6 +426,16 @@ namespace Joshua.Infra.Data.Migrations
                         .HasForeignKey("UserId")
                         .OnDelete(DeleteBehavior.Cascade)
                         .IsRequired();
+                });
+
+            modelBuilder.Entity("Joshua.Domain.Models.Cliente", b =>
+                {
+                    b.Navigation("Enderecos");
+                });
+
+            modelBuilder.Entity("Joshua.Domain.Models.Funcionario", b =>
+                {
+                    b.Navigation("Enderecos");
                 });
 #pragma warning restore 612, 618
         }

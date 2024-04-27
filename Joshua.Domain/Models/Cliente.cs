@@ -1,6 +1,6 @@
 ﻿namespace Joshua.Domain.Models
 {
-    public class Funcionario : Pessoa
+    public class Cliente : Pessoa
     {
         public virtual IList<Endereco> Enderecos { get; set; }
     }
