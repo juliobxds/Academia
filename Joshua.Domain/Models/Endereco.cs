@@ -14,7 +14,9 @@ namespace Joshua.Domain.Models
         public string Cep { get; set; }
         public string Cidade { get; set; }
         public string Estado { get; set; }
-        public int? IdFuncionario { get; set; }
+        public int? idFuncionario { get; set; }
         public Funcionario Funcionario { get; set; }
+        public int? idCliente { get; set; }
+        public Cliente Cliente { get; set; }
     }
 }

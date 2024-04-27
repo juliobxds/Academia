@@ -18,7 +18,8 @@ namespace Joshua.Infra.Data.Data.Mapping
             builder.Property(e => e.Cep).HasColumnName("cep").HasMaxLength(8);
             builder.Property(e => e.Cidade).HasColumnName("cidade").HasMaxLength(100);
             builder.Property(e => e.Estado).HasColumnName("estado").HasMaxLength(100);
-            builder.Property(e => e.IdFuncionario).HasColumnName("idFuncionario");
+            builder.Property(e => e.idFuncionario).HasColumnName("idFuncionario");
+            builder.Property(e => e.idCliente).HasColumnName("idCliente");
         }
     }
 }

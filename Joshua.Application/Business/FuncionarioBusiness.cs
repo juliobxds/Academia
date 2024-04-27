@@ -88,6 +88,7 @@ namespace Joshua.Application.Business
         public async Task<Response<FuncionarioViewModel>> Adicionar(FuncionarioViewModel funcionarioVM)
         {
             var response = new Response<FuncionarioViewModel>();
+
             try
             {
                 if (funcionarioVM == null)
@@ -110,6 +111,12 @@ namespace Joshua.Application.Business
                     return response;
 
                 }
+
+                foreach(var endereco in funcionarioVM.Enderecos)
+                {
+                    endereco.IdCliente = null;
+                }
+
                 funcionarioVM.CriadoEm = DateTime.Now;
                 funcionarioVM.ModificadoEm = DateTime.Now;
 
@@ -141,7 +148,7 @@ namespace Joshua.Application.Business
                 if (funcionarioBd == null)
                 {
                     response.Status = HttpStatusCode.NotFound;
-                    response.Message = "Funcionario não pode ser encontrado";
+                    response.Message = "Funcionario não existe no banco de dados!";
 
                     return response;
 
@@ -161,9 +168,10 @@ namespace Joshua.Application.Business
                 response.Status = HttpStatusCode.OK;
                 response.Message = "Este Funcionário foi atualizado!";
 
-                var map = mapper.Map<FuncionarioViewModel>(funcionarioBd);
+                var funcionarioViewModel = mapper.Map<FuncionarioViewModel>(funcionarioBd);
 
-                response.Entity = map;
+                response.Entity = funcionarioViewModel;
+
                 return response;
 
 
@@ -187,7 +195,7 @@ namespace Joshua.Application.Business
                 if (FuncionarioDb == null)
                 {
                     response.Status = HttpStatusCode.NotFound;
-                    response.Message = "Funcionario não pode ser encontrado";
+                    response.Message = "Funcionario não existe no banco de dados";
 
                     return response;
                 }

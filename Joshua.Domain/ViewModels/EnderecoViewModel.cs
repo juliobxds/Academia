@@ -15,5 +15,6 @@ namespace Joshua.Domain.ViewModels
         public string Cidade { get; set; }
         public string Estado { get; set; }
         public int? IdFuncionario { get; set; }
+        public int? IdCliente { get; set; }
     }
 }

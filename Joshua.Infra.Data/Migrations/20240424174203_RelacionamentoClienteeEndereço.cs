@@ -5,7 +5,7 @@ using Microsoft.EntityFrameworkCore.Migrations;
 
 namespace Joshua.Infra.Data.Migrations
 {
-    public partial class RelacionamentoFuncionarioeEndereco : Migration
+    public partial class RelacionamentoClienteeEndereço : Migration
     {
         protected override void Up(MigrationBuilder migrationBuilder)
         {
@@ -46,6 +46,23 @@ namespace Joshua.Infra.Data.Migrations
                 constraints: table =>
                 {
                     table.PrimaryKey("PK_AspNetUsers", x => x.Id);
+                });
+
+            migrationBuilder.CreateTable(
+                name: "Cliente",
+                columns: table => new
+                {
+                    id = table.Column<int>(type: "int", nullable: false)
+                        .Annotation("SqlServer:Identity", "1, 1"),
+                    criadoEm = table.Column<DateTime>(type: "datetime2", maxLength: 30, nullable: false),
+                    modificadoEm = table.Column<DateTime>(type: "datetime2", maxLength: 30, nullable: false),
+                    nome = table.Column<string>(type: "nvarchar(200)", maxLength: 200, nullable: false),
+                    email = table.Column<string>(type: "nvarchar(200)", maxLength: 200, nullable: false),
+                    celular = table.Column<string>(type: "nvarchar(30)", maxLength: 30, nullable: false)
+                },
+                constraints: table =>
+                {
+                    table.PrimaryKey("PK_Cliente", x => x.id);
                 });
 
             migrationBuilder.CreateTable(
@@ -182,11 +199,17 @@ namespace Joshua.Infra.Data.Migrations
                     cep = table.Column<string>(type: "nvarchar(8)", maxLength: 8, nullable: false),
                     cidade = table.Column<string>(type: "nvarchar(100)", maxLength: 100, nullable: false),
                     estado = table.Column<string>(type: "nvarchar(100)", maxLength: 100, nullable: false),
-                    idFuncionario = table.Column<int>(type: "int", nullable: true)
+                    idFuncionario = table.Column<int>(type: "int", nullable: true),
+                    idCliente = table.Column<int>(type: "int", nullable: true)
                 },
                 constraints: table =>
                 {
                     table.PrimaryKey("PK_Endereco", x => x.id);
+                    table.ForeignKey(
+                        name: "FK_Endereco_Cliente_idCliente",
+                        column: x => x.idCliente,
+                        principalTable: "Cliente",
+                        principalColumn: "id");
                     table.ForeignKey(
                         name: "FK_Endereco_Funcionario_idFuncionario",
                         column: x => x.idFuncionario,
@@ -234,6 +257,11 @@ namespace Joshua.Infra.Data.Migrations
                 filter: "[NormalizedUserName] IS NOT NULL");
 
             migrationBuilder.CreateIndex(
+                name: "IX_Endereco_idCliente",
+                table: "Endereco",
+                column: "idCliente");
+
+            migrationBuilder.CreateIndex(
                 name: "IX_Endereco_idFuncionario",
                 table: "Endereco",
                 column: "idFuncionario");
@@ -264,6 +292,9 @@ namespace Joshua.Infra.Data.Migrations
 
             migrationBuilder.DropTable(
                 name: "AspNetUsers");
+
+            migrationBuilder.DropTable(
+                name: "Cliente");
 
             migrationBuilder.DropTable(
                 name: "Funcionario");

@@ -8,6 +8,7 @@ namespace Joshua.API.Configurations
         public static void AddServices(this IServiceCollection services)
         {
             services.AddScoped<IFuncionarioBusiness, FuncionarioBusiness>();
+            services.AddScoped<IClienteBusiness, ClienteBusiness>();
             
         }
     }

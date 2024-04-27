@@ -12,8 +12,8 @@ using Microsoft.EntityFrameworkCore.Storage.ValueConversion;
 namespace Joshua.Infra.Data.Migrations
 {
     [DbContext(typeof(JoshuaContext))]
-    [Migration("20240411195836_RelacionamentoFuncionarioeEndereco")]
-    partial class RelacionamentoFuncionarioeEndereco
+    [Migration("20240424174203_RelacionamentoClienteeEndereço")]
+    partial class RelacionamentoClienteeEndereço
     {
         protected override void BuildTargetModel(ModelBuilder modelBuilder)
         {
@@ -23,6 +23,48 @@ namespace Joshua.Infra.Data.Migrations
                 .HasAnnotation("Relational:MaxIdentifierLength", 128);
 
             SqlServerModelBuilderExtensions.UseIdentityColumns(modelBuilder, 1L, 1);
+
+            modelBuilder.Entity("Joshua.Domain.Models.Cliente", b =>
+                {
+                    b.Property<int>("Id")
+                        .ValueGeneratedOnAdd()
+                        .HasColumnType("int")
+                        .HasColumnName("id");
+
+                    SqlServerPropertyBuilderExtensions.UseIdentityColumn(b.Property<int>("Id"), 1L, 1);
+
+                    b.Property<string>("Celular")
+                        .IsRequired()
+                        .HasMaxLength(30)
+                        .HasColumnType("nvarchar(30)")
+                        .HasColumnName("celular");
+
+                    b.Property<DateTime>("CriadoEm")
+                        .HasMaxLength(30)
+                        .HasColumnType("datetime2")
+                        .HasColumnName("criadoEm");
+
+                    b.Property<string>("Email")
+                        .IsRequired()
+                        .HasMaxLength(200)
+                        .HasColumnType("nvarchar(200)")
+                        .HasColumnName("email");
+
+                    b.Property<DateTime>("ModificadoEm")
+                        .HasMaxLength(30)
+                        .HasColumnType("datetime2")
+                        .HasColumnName("modificadoEm");
+
+                    b.Property<string>("Nome")
+                        .IsRequired()
+                        .HasMaxLength(200)
+                        .HasColumnType("nvarchar(200)")
+                        .HasColumnName("nome");
+
+                    b.HasKey("Id");
+
+                    b.ToTable("Cliente", (string)null);
+                });
 
             modelBuilder.Entity("Joshua.Domain.Models.Endereco", b =>
                 {
@@ -51,10 +93,6 @@ namespace Joshua.Infra.Data.Migrations
                         .HasColumnType("nvarchar(100)")
                         .HasColumnName("estado");
 
-                    b.Property<int?>("IdFuncionario")
-                        .HasColumnType("int")
-                        .HasColumnName("idFuncionario");
-
                     b.Property<string>("Logradouro")
                         .IsRequired()
                         .HasMaxLength(200)
@@ -67,9 +105,19 @@ namespace Joshua.Infra.Data.Migrations
                         .HasColumnType("nvarchar(200)")
                         .HasColumnName("rua");
 
+                    b.Property<int?>("idCliente")
+                        .HasColumnType("int")
+                        .HasColumnName("idCliente");
+
+                    b.Property<int?>("idFuncionario")
+                        .HasColumnType("int")
+                        .HasColumnName("idFuncionario");
+
                     b.HasKey("Id");
 
-                    b.HasIndex("IdFuncionario");
+                    b.HasIndex("idCliente");
+
+                    b.HasIndex("idFuncionario");
 
                     b.ToTable("Endereco", (string)null);
                 });
@@ -316,9 +364,15 @@ namespace Joshua.Infra.Data.Migrations
 
             modelBuilder.Entity("Joshua.Domain.Models.Endereco", b =>
                 {
+                    b.HasOne("Joshua.Domain.Models.Cliente", "Cliente")
+                        .WithMany("Enderecos")
+                        .HasForeignKey("idCliente");
+
                     b.HasOne("Joshua.Domain.Models.Funcionario", "Funcionario")
                         .WithMany("Enderecos")
-                        .HasForeignKey("IdFuncionario");
+                        .HasForeignKey("idFuncionario");
+
+                    b.Navigation("Cliente");
 
                     b.Navigation("Funcionario");
                 });
@@ -372,6 +426,11 @@ namespace Joshua.Infra.Data.Migrations
                         .HasForeignKey("UserId")
                         .OnDelete(DeleteBehavior.Cascade)
                         .IsRequired();
+                });
+
+            modelBuilder.Entity("Joshua.Domain.Models.Cliente", b =>
+                {
+                    b.Navigation("Enderecos");
                 });
 
             modelBuilder.Entity("Joshua.Domain.Models.Funcionario", b =>

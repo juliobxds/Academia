@@ -18,7 +18,7 @@ namespace Joshua.Infra.Data.Data.Mapping
             builder.Property(f => f.Celular).HasColumnName("celular").HasMaxLength(30);
             builder.Property(f => f.CriadoEm).HasColumnName("criadoEm").HasMaxLength(30);
             builder.Property(f => f.ModificadoEm).HasColumnName("modificadoEm").HasMaxLength(30);
-            builder.HasMany(x => x.Enderecos).WithOne(x => x.Funcionario).HasForeignKey(e => e.IdFuncionario);
+            builder.HasMany(x => x.Enderecos).WithOne(x => x.Funcionario).HasForeignKey(e => e.idFuncionario);
 
         }
     }

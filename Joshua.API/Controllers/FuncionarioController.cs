@@ -1,18 +1,13 @@
-﻿using Joshua.Application.Business;
-using Joshua.Application.Business.Interfaces;
-using Joshua.Domain.Models;
+﻿using Joshua.Application.Business.Interfaces;
 using Joshua.Domain.ViewModels;
-using Joshua.Infra.Data.Data;
 using Joshua.Infra.Utils.Transports;
-using Microsoft.AspNetCore.Cors;
 using Microsoft.AspNetCore.Mvc;
-using System.Reflection.Metadata.Ecma335;
 
 namespace Joshua.API.Controllers
 {
     [Route("api/[controller]")]
     [ApiController]
-   
+
     public class FuncionarioController : ControllerBase
     {
         private readonly IFuncionarioBusiness _funcionario;
@@ -47,9 +42,9 @@ namespace Joshua.API.Controllers
         }
 
         [HttpDelete("Deletar")]
-        public async Task<Response<FuncionarioViewModel>> Remover(int id) 
+        public async Task<Response<FuncionarioViewModel>> Remover(int id)
         {
-           return await _funcionario.Remover(id);
+            return await _funcionario.Remover(id);
         }
 
     }

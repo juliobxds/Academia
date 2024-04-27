@@ -10,6 +10,8 @@ namespace Joshua.Infra.Data.Data
     {
         public virtual DbSet<Funcionario> Funcionarios { get; set; }
         public virtual DbSet<Endereco> Enderecos { get; set; }
+        public virtual DbSet<Cliente> Clientes { get; set; }
+
 
 
         public JoshuaContext(DbContextOptions<JoshuaContext> options) : base(options)
@@ -34,6 +36,7 @@ namespace Joshua.Infra.Data.Data
 
             modelBuilder.ApplyConfiguration(new FuncionarioMap());
             modelBuilder.ApplyConfiguration(new EnderecoMap());
+            modelBuilder.ApplyConfiguration(new ClienteMap());
         }
     }
 }

@@ -11,6 +11,7 @@ namespace Joshua.Application.AutoMapper
 
                 CreateMap<Funcionario, FuncionarioViewModel>().ReverseMap();
                 CreateMap<Endereco, EnderecoViewModel>().ReverseMap();
+                CreateMap<Cliente, ClienteViewModel>().ReverseMap();
         }
     }
 }
